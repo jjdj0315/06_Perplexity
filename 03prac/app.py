@@ -2,6 +2,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from utils.session import session_control
+from utils.handler import stream_handler
 
 session_control()
 load_dotenv()
@@ -66,6 +67,7 @@ if user_input:
         st.chat_message("user").write(user_input)
 
         with st.chat_message("assistant"):
+            # 빈 공간(컨테이너)을 만들어서, 여기에 토큰을 스트리밍 출력한다.
             container = st.empty()
 
             ai_answer = ""
@@ -76,8 +78,6 @@ if user_input:
                     "messages": [
                         ("human", user_input),
                     ]
-                }
+                },
                 config,
             )
-
-
