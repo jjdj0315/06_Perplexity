@@ -1,8 +1,6 @@
-
+#import app.py
 import streamlit as st
-from langchain_core.messages.chat import ChatMessage
 from dotenv import load_dotenv
-
 from utils.session import session_control
 from utils.uuid import random_uuid
 from utils.print_message import print_messages
@@ -17,17 +15,6 @@ load_dotenv()
 st.title("Perplexity")
 st.markdown("LLM에 **웹검색 기능**을 추가한 PerPlexity클론 프로젝트 입니다.웹서치, 멀티턴대화를 지원합니다.")
 
-# 대화기록을 저장하기 위한 용도로 생성
-if "messages" not in st.session_state:
-    st.session_state["messages"] = []
-
-# ReAct Agent 초기화
-if "react_agent" not in st.session_state:
-    st.session_state["react_agent"] = None
-
-# include_domains 초기화
-if "include_domains" not in st.session_state:
-    st.session_state["include_domains"] = []
     
 #사이드바 생성
 with st.sidebar:
@@ -131,3 +118,7 @@ if user_input:
             add_message("assistant", agent_answer)
     else:
         warning_msg.warning("사이드바에서 설정을 완료해주세요.")
+        
+with st.expander("🔍 세션 상태 보기"):
+    for key, value in st.session_state.items():
+        st.write(f"{key}: {value}")
