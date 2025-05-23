@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 from utils.session import session_control
 from utils.handler import stream_handler
+from utils.add_message import add_message
 
 session_control()
 load_dotenv()
@@ -81,3 +82,16 @@ if user_input:
                 },
                 config,
             )
+
+            # 대화기록을 저장한다.
+            add_message("user", user_input)
+            for tool_arg in tool_args:
+                add_message(
+                    "assistant",
+                    tool_arg["tool_result"],
+                    "tool_result",
+                    tool_arg["tool_name"],
+                )
+            add_message("assistant", agent_answer)
+    else:
+        warning_msg.warning("사이드바에서 설정을 완료해주세요.")
