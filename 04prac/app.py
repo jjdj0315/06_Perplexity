@@ -1,18 +1,21 @@
 import streamlit as st
+
 from dotenv import load_dotenv
 
 from utils.session import session_control
 from utils.uuid import random_uuid
 from utils.print_message import print_messages
+from utils.tools import WebSearchTool
+from utils.agent import create_agent_executor
 from utils.handler import stream_handler
 from utils.add_message import add_message
 
-session_control()
 load_dotenv()
+session_control()
 
 st.title("PERPLEXITY")
 st.markdown(
-    "LLM에 **웹검색 기능**을 추가한 PerPlexity클론 프로젝트 입니다.웹서치, 멀티턴대화를 지원합니다"
+    "LLM에 **웹검색 기능**을 추가한 PerPlexity클론 프로젝트 입니다.웹서치, 멀티턴대화를 지원합니다."
 )
 
 # 사이드바 생성
@@ -54,14 +57,11 @@ with st.sidebar:
     # 설정 버튼
     apply_btn = st.button("설정 완료", type="primary")
 
+
 # 초기화 버튼
 if clear_btn:
     st.session_state["messages"] = []
     st.session_state["thread_id"] = random_uuid()
-
-# 이전 대화기록출력
-print_messages()
-
 
 # 사용자 입력
 user_input = st.chat_input("궁금한 내용을 물어보세요")
@@ -69,6 +69,22 @@ user_input = st.chat_input("궁금한 내용을 물어보세요")
 # 경고메시지를 띄우기 위한 빈 영역
 warning_msg = st.empty()
 
+# 이전 대화기록출력
+print_messages()
+
+# 설정 버튼이 눌리면
+if apply_btn:
+    tool = WebSearchTool().create()
+    tool.max_results = search_result_count
+    tool.include_domains = st.session_state["include_domains"]
+    tool.topic = search_topic
+    st.session_state["react_agent"] = create_agent_executor(
+        model_name=selected_model,
+        tools=[tool],
+    )
+    st.session_state["thread_id"] = random_uuid()
+
+# 만약에 사용자 입력이 들어오면
 if user_input:
     agent = st.session_state["react_agent"]
 

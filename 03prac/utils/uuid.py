@@ -1,4 +1,3 @@
-# uuid.py
 import uuid
 
 
