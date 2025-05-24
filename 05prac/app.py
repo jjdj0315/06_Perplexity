@@ -54,3 +54,8 @@ user_input = st.chat_input("궁금한 내용을 물어보세요")
 
 # 경고메시지를 띄우기 위한 빈 영역
 warning_msg = st.empty()
+
+#기능
+#설정버튼
+if apply_btn:
+    tool = WebSearchTool().create()
